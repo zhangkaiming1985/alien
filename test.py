@@ -1,6 +1,12 @@
-class Complex:
-    def __init__(self):
-        self.r = 3
-        self.i = 4
-x = Complex()
-print(x.r, x.i)   # 输出结果：3.0 -4.5
+class Base:
+	def __init__(self):
+		print("it is base class.")
+
+
+class Leaf(Base):
+	def __init__(self):
+		# Base.__init__(self)
+		super().__init__()
+		print("it is leaf class")
+
+test = Leaf()
