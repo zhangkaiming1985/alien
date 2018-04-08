@@ -40,3 +40,7 @@ class Ship:
 			self.center -= self.ai_settings.ship_speed_factor
 
 		self.rect.centerx = self.center
+
+	def center_ship(self):
+		"""重置飞船位置"""
+		self.rect.centerx = self.screen_rect.centerx
