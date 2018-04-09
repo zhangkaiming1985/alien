@@ -4,6 +4,7 @@ from pygame.sprite import Sprite
 
 class Ship(Sprite):
 	"""飞船类"""
+
 	def __init__(self, screen, ai_settings):
 		super().__init__()
 		"""初始化飞船位置"""
@@ -25,7 +26,6 @@ class Ship(Sprite):
 		# 移动标志
 		self.moving_right = False
 		self.moving_left = False
-
 
 	def blitme(self):
 		# 绘制飞船

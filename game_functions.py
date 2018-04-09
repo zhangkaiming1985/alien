@@ -4,6 +4,7 @@ from time import sleep
 from bullet import Bullet
 from alien import Alien
 
+
 def check_events(ship, bullets, screen, ai_settings, status, play_button, aliens, scoreboard):
 	"""响应按键和鼠标事件"""
 	for event in pygame.event.get():
@@ -14,11 +15,12 @@ def check_events(ship, bullets, screen, ai_settings, status, play_button, aliens
 			check_play_button(status, play_button, mouse_x, aliens, bullets, ship, screen, ai_settings, scoreboard)
 
 		# 游戏活动状态时，检测左右按键并作出响应
-		if status.game_active == True:
+		if status.game_active is True:
 			if event.type == pygame.KEYDOWN:
 				check_keydown_event(event, ship, bullets, screen, ai_settings)
 			elif event.type == pygame.KEYUP:
 				check_keyup_event(event, ship)
+
 
 def check_keydown_event(event, ship, bullets, screen, ai_settings):
 	# 按下按键
@@ -31,6 +33,7 @@ def check_keydown_event(event, ship, bullets, screen, ai_settings):
 	elif event.key == pygame.K_q:
 		sys.exit()
 
+
 def check_keyup_event(event, ship):
 	# 抬起按键
 	if event.key == pygame.K_RIGHT:
@@ -38,10 +41,11 @@ def check_keyup_event(event, ship):
 	elif event.key == pygame.K_LEFT:
 		ship.moving_left = False
 
+
 def check_play_button(status, play_button, mouse_x, aliens, bullets, ship, screen, ai_settings, scoreboard):
 	"""鼠标左键单击play，开始游戏"""
 	button_clicked = play_button.rect.collidepoint(mouse_x)
-	if button_clicked and (status.game_active == False):
+	if button_clicked and (status.game_active is False):
 		# 重置游戏信息
 		ai_settings.initialize_dynamic_settings()
 		status.reset_status()
@@ -74,14 +78,14 @@ def update_bullets(bullets, aliens, screen, ai_settings, ship, status, scoreboar
 	check_bullet_alien_collections(screen, ai_settings, aliens, ship, bullets, status, scoreboard)
 
 
-def	check_bullet_alien_collections(screen, ai_settings, aliens, ship, bullets, status, scoreboard):
+def check_bullet_alien_collections(screen, ai_settings, aliens, ship, bullets, status, scoreboard):
 	"""检测子弹与外星人碰撞"""
 
 	# 检查是否有子弹击中外星人，若有则删除相应子弹和外星人
 	collections = pygame.sprite.groupcollide(bullets, aliens, True, True)
 	# 若发生碰撞，则增加得分
 	if collections:
-		for a in collections.values():# 在collection中，碰撞的子弹是一个键，所有与每颗子弹相关的值都是列表，包含该子弹碰撞的外星人
+		for a in collections.values():  # 在collection中，碰撞的子弹是一个键，所有与每颗子弹相关的值都是列表，包含该子弹碰撞的外星人
 			status.score += ai_settings.alien_points * len(a)
 			scoreboard.prep_score()
 		check_high_score(status, scoreboard)
@@ -218,7 +222,7 @@ def update_screen(ai_settings, screen, ship, bullets, aliens, play_button, statu
 	for bullet in bullets.sprites():
 		bullet.draw_bullet()
 
-	if status.game_active == False:
+	if (status.game_active is False):
 		play_button.draw_button()
 
 	# 让最近绘制的屏幕可见

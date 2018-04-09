@@ -13,7 +13,7 @@ class Bullet(Sprite):
 
 		# 在0，0位置初始化子弹
 		self.rect = pygame.Rect(0, 0, ai_settings.bullet_width,
-			ai_settings.bullet_height)
+		                        ai_settings.bullet_height)
 		# 将子弹移动到飞船上方
 		self.rect.centerx = ship.rect.centerx
 		self.rect.top = ship.rect.top
