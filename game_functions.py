@@ -161,7 +161,7 @@ def change_fleet_direction(ai_settings, aliens):
 		alien.rect.y = alien.y
 
 
-def update_aliens(aliens, ai_settings, ship, status, bullets, screen):
+def update_aliens(aliens, ai_settings, ship, status, bullets, screen, scoreboard):
 	"""更新外星人位置"""
 	# 检查外星人群是否到达边缘
 	check_fleet_edges(aliens, ai_settings)
@@ -169,19 +169,20 @@ def update_aliens(aliens, ai_settings, ship, status, bullets, screen):
 
 	# 检查外星人与飞船是否发生碰撞，若是则执行ship_hit()
 	if pygame.sprite.spritecollideany(ship, aliens):
-		ship_hit(status, aliens, bullets, screen, ai_settings, ship)
+		ship_hit(status, aliens, bullets, screen, ai_settings, ship, scoreboard)
 	# 检查外星人是否到达屏幕底端，若是则执行ship_hit()
 	for alien in aliens:
 		if alien.check_bottom():
-			ship_hit(status, aliens, bullets, screen, ai_settings, ship)
+			ship_hit(status, aliens, bullets, screen, ai_settings, ship, scoreboard)
 			break
 
 
-def ship_hit(status, aliens, bullets, screen, ai_settings, ship):
+def ship_hit(status, aliens, bullets, screen, ai_settings, ship, scoreboard):
 	"""飞船被击中"""
 	if status.ship_left > 0:
 		# 飞船-1
 		status.ship_left -= 1
+		scoreboard.prep_ship()
 		# 重置外星人、子弹、飞船位置
 		aliens.empty()
 		bullets.empty()
