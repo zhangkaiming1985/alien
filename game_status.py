@@ -6,6 +6,9 @@ class GameStatus:
 		self.ai_settings = ai_settings
 		# 游戏开始时处于非活动状态
 		self.game_active = False
+		# 历史最高分，在任何情况下都不应重置
+		self.high_score = 0
+
 		self.reset_status()
 
 	def reset_status(self):
@@ -14,3 +17,5 @@ class GameStatus:
 		self.ship_left = self.ai_settings.ship_limit
 		# 玩家得分
 		self.score = 0
+		# 玩家等级
+		self.level = 1

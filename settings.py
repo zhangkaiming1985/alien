@@ -24,6 +24,7 @@ class Settings:
 
 		# 提升难度比例
 		self.speedup_scale = 2
+		self.score_scale = 1.8
 
 		# 动态数据
 		# 初始化动态数据
@@ -51,7 +52,7 @@ class Settings:
 		# 提高子弹速度
 		self.bullet_speed_factor *= self.speedup_scale
 		# 提高外星人分数
-		self.alien_points *= 2
+		self.alien_points *= self.score_scale
 
 
 

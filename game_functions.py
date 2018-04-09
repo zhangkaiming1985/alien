@@ -3,23 +3,22 @@ import pygame
 from time import sleep
 from bullet import Bullet
 from alien import Alien
-from button import Button
-from scoreboard import Scroeboard
 
-def check_events(ship, bullets, screen, ai_settings, status, play_button, aliens):
+def check_events(ship, bullets, screen, ai_settings, status, play_button, aliens, scoreboard):
 	"""响应按键和鼠标事件"""
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
 			sys.exit()
 		elif event.type == pygame.MOUSEBUTTONDOWN:
 			mouse_x = pygame.mouse.get_pos()
-			check_play_button(status, play_button, mouse_x, aliens, bullets, ship, screen, ai_settings)
+			check_play_button(status, play_button, mouse_x, aliens, bullets, ship, screen, ai_settings, scoreboard)
 
-		# 检测左右按键并作出响应
-		elif event.type == pygame.KEYDOWN:
-			check_keydown_event(event, ship, bullets, screen, ai_settings)
-		elif event.type == pygame.KEYUP:
-			check_keyup_event(event, ship)
+		# 游戏活动状态时，检测左右按键并作出响应
+		if status.game_active == True:
+			if event.type == pygame.KEYDOWN:
+				check_keydown_event(event, ship, bullets, screen, ai_settings)
+			elif event.type == pygame.KEYUP:
+				check_keyup_event(event, ship)
 
 def check_keydown_event(event, ship, bullets, screen, ai_settings):
 	# 按下按键
@@ -39,7 +38,7 @@ def check_keyup_event(event, ship):
 	elif event.key == pygame.K_LEFT:
 		ship.moving_left = False
 
-def check_play_button(status, play_button, mouse_x, aliens, bullets, ship, screen, ai_settings):
+def check_play_button(status, play_button, mouse_x, aliens, bullets, ship, screen, ai_settings, scoreboard):
 	"""鼠标左键单击play，开始游戏"""
 	button_clicked = play_button.rect.collidepoint(mouse_x)
 	if button_clicked and (status.game_active == False):
@@ -50,6 +49,12 @@ def check_play_button(status, play_button, mouse_x, aliens, bullets, ship, scree
 
 		# 游戏活动时隐藏光标
 		pygame.mouse.set_visible(False)
+
+		# 刷新得分板
+		scoreboard.prep_score()
+		scoreboard.prep_high_score()
+		scoreboard.prep_level()
+		scoreboard.prep_ship()
 
 		# 清空外星人和子弹，飞船居中
 		aliens.empty()
@@ -76,13 +81,18 @@ def	check_bullet_alien_collections(screen, ai_settings, aliens, ship, bullets, s
 	collections = pygame.sprite.groupcollide(bullets, aliens, True, True)
 	# 若发生碰撞，则增加得分
 	if collections:
-		for aliens in collections.values():# 在collection中，碰撞的子弹是一个键，所有与这个键相关的子弹值是列表
-			status.score += ai_settings.alien_points * len(aliens)
+		for a in collections.values():# 在collection中，碰撞的子弹是一个键，所有与每颗子弹相关的值都是列表，包含该子弹碰撞的外星人
+			status.score += ai_settings.alien_points * len(a)
 			scoreboard.prep_score()
+		check_high_score(status, scoreboard)
 	# 若外星人群全部被消灭，则新建一组，并提高游戏难度
 	if len(aliens) == 0:
 		bullets.empty()
 		ai_settings.increase_speed()
+		# 更新等级
+		status.level += 1
+		scoreboard.prep_level()
+
 		create_fleet(screen, ai_settings, aliens, ship)
 
 
@@ -185,6 +195,13 @@ def ship_hit(status, aliens, bullets, screen, ai_settings, ship):
 		pygame.mouse.set_visible(True)
 
 
+def check_high_score(status, scoreboard):
+	"""检查是否产生新的最高分"""
+	if status.high_score < status.score:
+		status.high_score = status.score
+		scoreboard.prep_high_score()
+
+
 def update_screen(ai_settings, screen, ship, bullets, aliens, play_button, status, scoreboard):
 	"""更新屏幕图像， 切换到新屏幕"""
 
@@ -200,7 +217,7 @@ def update_screen(ai_settings, screen, ship, bullets, aliens, play_button, statu
 	for bullet in bullets.sprites():
 		bullet.draw_bullet()
 
-	if not status.game_active:
+	if status.game_active == False:
 		play_button.draw_button()
 
 	# 让最近绘制的屏幕可见
