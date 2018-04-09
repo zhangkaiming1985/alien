@@ -1,6 +1,7 @@
 import pygame
 from pygame.sprite import Sprite
 
+
 class Alien(Sprite):
 	"""外星人类"""
 
@@ -33,7 +34,7 @@ class Alien(Sprite):
 		# 向左右移动外星人，并防止精度损失
 		self.x = float(self.rect.x)
 		self.x += (self.speed_factor * self.ai_settings.fleet_direction)
-		self.rect.x =self.x
+		self.rect.x = self.x
 
 	def check_edges(self):
 		# 检查外星人个体是否到达屏幕边缘，若是返回Ture
@@ -41,4 +42,10 @@ class Alien(Sprite):
 		if self.rect.right >= screen_rect.right:
 			return True
 		elif self.rect.left <= screen_rect.left:
+			return True
+
+	def check_bottom(self):
+		"""检查外星人个体是否到达屏幕底端，若是返回True"""
+		screen_rect = self.screen.get_rect()
+		if self.rect.bottom >= screen_rect.bottom:
 			return True

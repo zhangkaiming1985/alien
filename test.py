@@ -25,7 +25,9 @@ image_rect = image.get_rect()
 image_rect.x = 50
 image_rect.y = 50
 
-while True:
+x = False
+print(not x)
+while not x:
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
 			sys.exit()

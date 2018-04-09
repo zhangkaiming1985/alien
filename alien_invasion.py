@@ -5,6 +5,8 @@ import game_functions as gf
 from settings import Settings
 from game_status import GameStatus
 from ship import Ship
+from button import Button
+from scoreboard import Scroeboard
 
 def run_game():
 	# 初始化pygame、设置和屏幕对象
@@ -13,8 +15,10 @@ def run_game():
 
 	screen = pygame.display.set_mode((ai_settings.screen_width, ai_settings.screen_height))
 	pygame.display.set_caption(ai_settings.caption)
+	play_button = Button(screen, 'PLAY')
 
 	status = GameStatus(ai_settings)
+	scoreboard = Scroeboard(screen, ai_settings, status)
 	ship = Ship(screen, ai_settings)
 	bullets = Group()
 	aliens = Group()
@@ -26,19 +30,18 @@ def run_game():
 	while True:
 
 		# 监视键盘和鼠标事件
-		gf.check_events(ship, bullets, screen, ai_settings)
+		gf.check_events(ship, bullets, screen, ai_settings, status, play_button, aliens)
 
-		# 更新飞船
-		ship.update()
-
-		# 更新子弹
-		gf.update_bullets(bullets,aliens,screen, ai_settings,ship)
-
-		# 更新外星人
-		gf.update_aliens(aliens, ai_settings, ship, status, bullets, screen)
-
+		if status.game_active == True:
+			# 更新飞船
+			ship.update()
+			# 更新子弹
+			gf.update_bullets(bullets,aliens,screen, ai_settings,ship, status, scoreboard)
+			# 更新外星人
+			gf.update_aliens(aliens, ai_settings, ship, status, bullets, screen)
 		# 更新屏幕
-		gf.update_screen(ai_settings, screen, ship, bullets, aliens)
+		gf.update_screen(ai_settings, screen, ship, bullets, aliens, play_button, status, scoreboard)
+
 
 
 run_game()
